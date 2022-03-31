@@ -16,8 +16,8 @@ export const refreshData = functions.https.onRequest((request, response) => {
   if (!collection) {
     response.status(404).json({message: "Not found collection " + request.body.collection});
   } else {
-    const data: any = request.body.data;
-    if (data && data.length) for (const item of data) db.collection(collection).doc(item.symbol.replace('/', '_')).set(item);
+    const data = request.body.data;
+    if (data && data.length) for (const item of data) db.collection(collection).doc(item.symbol.replace("/", "_")).set(item);
     response.status(200).json({message: "Updated or created data"});
   }
 });
