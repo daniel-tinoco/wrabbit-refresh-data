@@ -7,19 +7,17 @@ const db = admin.firestore();
 
 export const refreshData = functions.https.onRequest((request, response) => {
   const collectionsAllowed = [
-    {name: "ticker_all", id: "kayjx9kZE6JRpJ5WZCgw"},
-    {name: "ticker_all_staging", id: "Qnmm6ZmqgI4vRb1QIMCR"},
-    {name: "market_summary", id: "PwerdYXavQnUsuk7rCKS"},
-    {name: "market_summary_staging", id: "ewMsAwtJY5LzvzzunvID"},
+    "ticker_all",
+    "ticker_all_staging",
+    "market_summary",
+    "market_summary_staging",
   ];
-  const collection = collectionsAllowed.find((collection) => collection.name === request.body.collection);
+  const collection = collectionsAllowed.find((collection) => collection === request.body.collection);
   if (!collection) {
     response.status(404).json({message: "Not found collection " + request.body.collection});
   } else {
-    db.collection(collection.name).doc(collection.id).update({
-      data: request.body.data,
-      updated_at: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    const data: any = request.body.data;
+    if (data && data.length) for (const item of data) db.collection(collection).doc(item.symbol.replace('/', '_')).set(item);
     response.status(200).json({message: "Updated or created data"});
   }
 });
