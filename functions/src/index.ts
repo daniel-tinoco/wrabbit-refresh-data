@@ -5,7 +5,7 @@ admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({timestampsInSnapshots: true});
 const db = admin.firestore();
 
-export const refreshData = functions.https.onRequest((request, response) => {
+export const refreshData = functions.https.onRequest(async (request, response) => {
   const collectionsAllowed = [
     "ticker_all",
     "ticker_all_staging",
@@ -17,7 +17,7 @@ export const refreshData = functions.https.onRequest((request, response) => {
     response.status(404).json({message: "Not found collection " + request.body.collection});
   } else {
     const data = request.body.data;
-    if (data && data.length) for (const item of data) db.collection(collection).doc(item.symbol.replace("/", "_")).set(item);
+    if (data && data.length) for (const item of data) await db.collection(collection).doc(item.symbol.replace("/", "_")).set(item);
     response.status(200).json({message: "Updated or created data"});
   }
 });
