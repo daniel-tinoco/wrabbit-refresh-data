@@ -21,7 +21,7 @@ export const refreshData = functions.https.onRequest(async (request, response) =
     response.status(404).json({message: "Not found collection " + request.body.collection});
   } else {
     const data = request.body.data;
-    if (data && data.length) await db.collection(collection).doc('info').set({data});
+    if (data && data.length) await db.collection(collection).doc("info").set({data});
     response.status(200).json({message: "Updated or created data"});
   }
 });
