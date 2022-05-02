@@ -6,10 +6,6 @@ admin.firestore().settings({timestampsInSnapshots: true});
 const db = admin.firestore();
 
 export const refreshData = functions.https.onRequest(async (request, response) => {
-  functions.logger.info("Created or updated data", {
-    structuredData: true,
-    body: request.body,
-  });
   const collectionsAllowed = [
     "ticker_all",
     "ticker_all_staging",
